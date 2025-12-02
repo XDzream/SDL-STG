@@ -1,0 +1,3 @@
+D:/NewSdlButtleHell/cmake-build-debug/CMakeFiles/NewSdlButtleHell.dir
+D:/NewSdlButtleHell/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/NewSdlButtleHell/cmake-build-debug/CMakeFiles/rebuild_cache.dir

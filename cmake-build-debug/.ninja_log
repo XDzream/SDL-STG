@@ -1,0 +1,11 @@
+# ninja log v6
+3	626	7862776454870418	CMakeFiles/NewSdlButtleHell.dir/CMakeFiles/3.30.5/CompilerIdC/CMakeCCompilerId.c.obj	2636988542b71c84
+20	629	7862776455032846	CMakeFiles/NewSdlButtleHell.dir/CMakeFiles/3.30.5/CompilerIdCXX/CMakeCXXCompilerId.cpp.obj	793ee09fec1e89b3
+10	230	7862779371139001	CMakeFiles/NewSdlButtleHell.dir/main.cpp.obj	fe54cffc943da1b9
+5	181	7862787282683853	NewSdlButtleHell.exe	383f77a7ebe0d39c
+2	259	7862807452358314	CMakeFiles/NewSdlButtleHell.dir/src/main.cpp.obj	a2474c41f4c023e
+261	491	7862807454945429	NewSdlButtleHell.exe	7740efa3e5231606
+5	290	7862825930440068	CMakeFiles/NewSdlButtleHell.dir/src/main.cpp.obj	a2474c41f4c023e
+291	561	7862825933296672	NewSdlButtleHell.exe	7740efa3e5231606
+15	258	7862833616996833	CMakeFiles/NewSdlButtleHell.dir/src/main.cpp.obj	a2474c41f4c023e
+259	498	7862833619426636	NewSdlButtleHell.exe	7740efa3e5231606
