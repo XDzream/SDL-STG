@@ -28,6 +28,10 @@ list(FILTER HEADERS EXCLUDE REGEX ".*cmake-build-debug.*")
 add_executable(NewSdlButtleHell
         ${SOURCES}
         ${HEADERS}
+        src/graphics/Renderer.cpp
+        src/graphics/Renderer.h
+        src/input/InputHandler.cpp
+        src/input/InputHandler.h
 )
 
 # 链接SDL3库
