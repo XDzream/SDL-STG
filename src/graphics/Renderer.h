@@ -5,7 +5,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#endif //RENDERER_H
+
 
 #include<SDL3/SDL.h>
 
@@ -38,3 +38,4 @@ public:
 
 
 };
+#endif //RENDERER_H

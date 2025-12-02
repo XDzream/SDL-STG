@@ -49,20 +49,39 @@ void Renderer::Cleanup() {
 
 void Renderer::Present() {
     if(isInitialized && renderer) {
-        SDL_RenderPresent(renderer);
+        if (!SDL_RenderPresent(renderer)) {
+            std::cerr << "SDL_RenderPresent failed: " << SDL_GetError() << std::endl;
+        }
     }
 }
 
 void Renderer::Clear() {
     if (isInitialized && renderer) {
-        SDL_RenderClear(renderer);
+        if (!SDL_RenderClear(renderer)) {
+            std::cerr << "SDL_RenderClear failed: " << SDL_GetError() << std::endl;
+        }
     }
 }
 
 void Renderer::SetDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
     if (isInitialized && renderer) {
-        SDL_SetRenderDrawColor(renderer, r, g, b, a);
+        if (!SDL_SetRenderDrawColor(renderer, r, g, b, a)) {
+            std::cerr << "SDL_SetRenderDrawColor failed: " << SDL_GetError() << std::endl;
+        }
     } else {
-        std::cout << "SetDrawColor failed: not initialized" << std::endl;
+        std::cerr << "SetDrawColor failed: renderer not initialized" << std::endl;
     }
+}
+
+// 状态查询函数实现
+SDL_Window* Renderer::GetWindow() const {
+    return window;
+}
+
+SDL_Renderer* Renderer::GetRenderer() const {
+    return renderer;
+}
+
+bool Renderer::IsInitialized() const {
+    return isInitialized;
 }

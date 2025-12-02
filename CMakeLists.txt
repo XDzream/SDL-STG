@@ -32,6 +32,8 @@ add_executable(NewSdlButtleHell
         src/graphics/Renderer.h
         src/input/InputHandler.cpp
         src/input/InputHandler.h
+        src/graphics/Sprite.cpp
+        src/graphics/Sprite.h
 )
 
 # 链接SDL3库

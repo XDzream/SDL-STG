@@ -56,6 +56,13 @@ build CMakeFiles/NewSdlButtleHell.dir/src/graphics/Renderer.cpp.obj: CXX_COMPILE
   OBJECT_DIR = CMakeFiles\NewSdlButtleHell.dir
   OBJECT_FILE_DIR = CMakeFiles\NewSdlButtleHell.dir\src\graphics
 
+build CMakeFiles/NewSdlButtleHell.dir/src/graphics/Sprite.cpp.obj: CXX_COMPILER__NewSdlButtleHell_unscanned_Debug D$:/NewSdlButtleHell/src/graphics/Sprite.cpp || cmake_object_order_depends_target_NewSdlButtleHell
+  DEP_FILE = CMakeFiles\NewSdlButtleHell.dir\src\graphics\Sprite.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IF:/123/StackingArea/SDL3-3.2.10/x86_64-w64-mingw32/include
+  OBJECT_DIR = CMakeFiles\NewSdlButtleHell.dir
+  OBJECT_FILE_DIR = CMakeFiles\NewSdlButtleHell.dir\src\graphics
+
 build CMakeFiles/NewSdlButtleHell.dir/src/input/InputHandler.cpp.obj: CXX_COMPILER__NewSdlButtleHell_unscanned_Debug D$:/NewSdlButtleHell/src/input/InputHandler.cpp || cmake_object_order_depends_target_NewSdlButtleHell
   DEP_FILE = CMakeFiles\NewSdlButtleHell.dir\src\input\InputHandler.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
@@ -78,7 +85,7 @@ build CMakeFiles/NewSdlButtleHell.dir/src/main.cpp.obj: CXX_COMPILER__NewSdlButt
 #############################################
 # Link the executable NewSdlButtleHell.exe
 
-build NewSdlButtleHell.exe: CXX_EXECUTABLE_LINKER__NewSdlButtleHell_Debug CMakeFiles/NewSdlButtleHell.dir/src/graphics/Renderer.cpp.obj CMakeFiles/NewSdlButtleHell.dir/src/input/InputHandler.cpp.obj CMakeFiles/NewSdlButtleHell.dir/src/main.cpp.obj
+build NewSdlButtleHell.exe: CXX_EXECUTABLE_LINKER__NewSdlButtleHell_Debug CMakeFiles/NewSdlButtleHell.dir/src/graphics/Renderer.cpp.obj CMakeFiles/NewSdlButtleHell.dir/src/graphics/Sprite.cpp.obj CMakeFiles/NewSdlButtleHell.dir/src/input/InputHandler.cpp.obj CMakeFiles/NewSdlButtleHell.dir/src/main.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lmingw32  -lSDL3  -lSDL3_image  -lSDL3_ttf  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LF:/123/StackingArea/SDL3-3.2.10/x86_64-w64-mingw32/bin
