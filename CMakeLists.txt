@@ -34,6 +34,10 @@ add_executable(NewSdlButtleHell
         src/input/InputHandler.h
         src/graphics/Sprite.cpp
         src/graphics/Sprite.h
+        src/gamecore/Game.cpp
+        src/gamecore/Game.h
+        src/entity/EntityBase.cpp
+        src/entity/EntityBase.h
 )
 
 # 链接SDL3库
