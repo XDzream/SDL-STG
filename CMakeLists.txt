@@ -38,6 +38,8 @@ add_executable(NewSdlButtleHell
         src/gamecore/Game.h
         src/entity/EntityBase.cpp
         src/entity/EntityBase.h
+        src/entity/SelfMachinesBase.cpp
+        src/entity/SelfMachinesBase.h
 )
 
 # 链接SDL3库

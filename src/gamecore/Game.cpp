@@ -126,7 +126,7 @@ void Game::HandleEvents() {
     }
 }
 
-void Game::FrameRateControl() {  // 注意：Game.h中可能写的是FrameRateControl()
+void Game::FrameRateControl() {
     // 从main.cpp移植的帧率控制逻辑
     const int FPS = 60;
     const int frameLength = 1000 / FPS;
