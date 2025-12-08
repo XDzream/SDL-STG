@@ -129,7 +129,7 @@ protected:
 
     // 辅助方法
     void UpdateTimers(float deltaTime);
-    void UpdateStateEffects(float deltaTime);
+    virtual void UpdateStateEffects(float deltaTime);
     bool ShouldBombResetHitbox() const;          //bomb清屏子弹
 
     void UpdateHitPointVisibility();      // 更新判定点显示状态

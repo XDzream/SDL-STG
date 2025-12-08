@@ -202,9 +202,7 @@ void SelfMachineBase::UpdateTimers(float deltaTime) {
     }
 }
 
-void SelfMachineBase::UpdateStateEffects(float deltaTime) {
-    // 基类不实现具体特效，交给子类
-}
+
 
 bool SelfMachineBase::ShouldBombResetHitbox() const {
     return IsInBombMode();  // 东方机制：炸弹时无敌

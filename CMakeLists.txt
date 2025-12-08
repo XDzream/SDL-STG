@@ -40,6 +40,8 @@ add_executable(NewSdlButtleHell
         src/entity/EntityBase.h
         src/entity/SelfMachinesBase.cpp
         src/entity/SelfMachinesBase.h
+        src/player/TestPlayer.cpp
+        src/player/TestPlayer.h
 )
 
 # 链接SDL3库
