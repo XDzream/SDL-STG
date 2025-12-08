@@ -48,6 +48,10 @@ protected:
     // 窗口边界（用于边界限制）
     int windowWidth;
     int windowHeight;
+
+    //碰撞体
+    float visualHitPointRadius;
+    bool showHitPoint;
     
     // 输入处理器引用
     InputHandler* inputHandler;
@@ -61,7 +65,7 @@ public:
     // 重写基类方法
     void Update(float deltaTime) override;
     void Render(Renderer* renderer) override;
-    void Initialize() override;
+    void Initialize(Renderer* renderer) override;
     void OnDestroy() override;
     void OnCollision(EntityBase* other) override;
 
@@ -109,7 +113,7 @@ public:
     bool CanUpgradePower() const { return power < 4.0f; }
     
     // 继承相关的碰撞体设置
-    void SetupPlayerCollider();
+    virtual void SetupPlayerCollider();
 
     //debug
     void SetDebugMode(bool enable) { debugMode = enable; }
@@ -127,6 +131,9 @@ protected:
     void UpdateTimers(float deltaTime);
     void UpdateStateEffects(float deltaTime);
     bool ShouldBombResetHitbox() const;          //bomb清屏子弹
+
+    void UpdateHitPointVisibility();      // 更新判定点显示状态
+    void RenderHitPoint(Renderer* renderer); // 渲染集中时的判定点
 };
 
 #endif //SELFMACHINESBASE_H

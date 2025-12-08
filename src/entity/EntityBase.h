@@ -22,6 +22,13 @@ enum class EntityType {
     ITEM_POINT
 };
 
+enum class ColliderType {
+    NONE,           // 无碰撞体
+    RECTANGLE,      // 矩形碰撞体
+    CIRCLE,         // 圆形碰撞体
+    PIXEL_PERFECT   // 像素级碰撞（可选）
+};
+
 class EntityBase {
 
 
@@ -37,6 +44,15 @@ protected:
     float velocityX = 0.0f; 
     float velocityY = 0.0f;
 
+    float colliderX = 0.0f;          // 碰撞体偏移X
+    float colliderY = 0.0f;          // 碰撞体偏移Y
+    float colliderWidth = 0.0f;      // 碰撞体宽度
+    float colliderHeight = 0.0f;      // 碰撞体高度
+    bool useCustomCollider = false;  // 是否使用自定义碰撞体
+    ColliderType colliderType = ColliderType::NONE;
+    bool isCircleCollider = false;
+    float colliderRadius = 0.0f;
+
 public:
     EntityBase(EntityType type , float x = 0.0f, float y = 0.0f, float width = 0.0f, float height = 0.0f);
 
@@ -49,7 +65,7 @@ public:
     virtual void Render(Renderer* renderer) = 0;
 
     // 可选的虚函数 - 子类可以重写
-    virtual void Initialize() {}
+    virtual void Initialize(Renderer* renderer) {}
 
     virtual void OnDestroy() {}
 
@@ -67,6 +83,13 @@ public:
     [[nodiscard]] float GetVelocityX() const { return velocityX; }
     [[nodiscard]] float GetVelocityY() const { return velocityY; }
 
+    [[nodiscard]] SDL_FRect GetColliderBounds() const;
+    [[nodiscard]] float GetColliderX() const { return colliderX; }
+    [[nodiscard]] float GetColliderY() const { return colliderY; }
+    [[nodiscard]] float GetColliderWidth() const { return colliderWidth; }
+    [[nodiscard]] float GetColliderHeight() const { return colliderHeight; }
+    [[nodiscard]] bool UseCustomCollider() const { return useCustomCollider; }
+
     // 基础设置器
     void SetPosition(float x, float y);
     void SetX(float x) { this->x = x; }
@@ -79,6 +102,12 @@ public:
     void SetVelocity(float vx, float vy);
     void SetVelocityX(float vx) { this->velocityX = vx; }
     void SetVelocityY(float vy) { this->velocityY = vy; }
+
+    void SetRectangleCollider(float x, float y, float width, float height);
+    void SetCircleCollider(float centerX, float centerY, float radius);
+    void SetCustomColliderEnabled(bool enabled);
+    void SetColliderOffset(float x, float y);
+    void SetColliderSize(float width, float height);
 
     // 位置操作
     void Move(float dx, float dy);
@@ -99,6 +128,18 @@ public:
     // 子类可用的辅助方法
     void ClampPosition(float minX, float minY, float maxX, float maxY);
     void UpdateBoundsBasedOnSprite(int spriteWidth, int spriteHeight);
+
+    //碰撞相关
+    [[nodiscard]] float GetColliderRadius() const { return colliderRadius; }
+    [[nodiscard]] bool IsCircleCollider() const { return isCircleCollider; }
+    [[nodiscard]] ColliderType GetColliderType() const { return colliderType; }
+
+    // 碰撞检测
+    [[nodiscard]] bool IsCollidingWithCircle(const EntityBase& other) const;
+    [[nodiscard]] bool IsCollidingWithMixed(const EntityBase& other) const;
+
+    // 渲染
+    void RenderCollider(Renderer* renderer, SDL_Color color = {255, 0, 0, 128}) const;
 
 
 

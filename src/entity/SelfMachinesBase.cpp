@@ -7,13 +7,12 @@
 
 SelfMachineBase::SelfMachineBase(InputHandler* inputHandler,int windowWidth, int windowHeight)
     : EntityBase(EntityType::PLAYER),
-      inputHandler(inputHandler),renderer(renderer) ,windowWidth(windowWidth), windowHeight(windowHeight),
+      inputHandler(inputHandler),renderer(nullptr) ,windowWidth(windowWidth), windowHeight(windowHeight),
       currentState(PlayerState::NORMAL),
+      speed(2.0f), focusSpeed(1.0f),  // ✅ 合理的默认速度
       bombCount(3), power(1.0f), lives(3), bombFragments(0),
-      invincibleTimer(0.0f), bombTimer(0.0f) {
-
-    speed = 0.0f;
-    focusSpeed = 0.0f;
+      invincibleTimer(0.0f), bombTimer(0.0f),
+      visualHitPointRadius(2.0f), showHitPoint(false), debugMode(false) { // ✅ 初始化所有成员
     
     sprite = std::make_unique<Sprite>();
 }
@@ -37,18 +36,28 @@ void SelfMachineBase::Render(Renderer* renderer) {
         sprite->Render(*renderer, (int)x, (int)y);
     }
     
+    // 渲染集中时的判定点（非调试模式也显示）
+    if (showHitPoint) {
+        RenderHitPoint(renderer);
+    }
+    
     // 调试模式：显示碰撞体
     if (debugMode) {
-        SDL_FRect collider = GetBounds();
-        SDL_SetRenderDrawColor(renderer->GetRenderer(), 255, 0, 0, 128);
-        SDL_RenderFillRect(renderer->GetRenderer(), &collider);
+        SDL_Color colliderColor = {255, 0, 0, 128};  // 红色
+        if (IsInvincible()) {
+            static int flashCounter = 0;
+            flashCounter++;
+            if (flashCounter % 10 < 5) {
+                colliderColor = {255, 255, 0, 128};  // 无敌时黄色闪烁
+            }
+        }
+        RenderCollider(renderer, colliderColor);  // 使用正确的碰撞体渲染
     }
 }
 
-void SelfMachineBase::Initialize() {
-    
-    // 设置玩家特有的小圆圈碰撞体
-    SetupPlayerCollider();
+
+void SelfMachineBase::Initialize(Renderer* renderer) {
+    this->renderer = renderer;
 }
 
 void SelfMachineBase::OnDestroy() {
@@ -70,15 +79,6 @@ void SelfMachineBase::OnCollision(EntityBase* other) {
     }
 }
 
-//虚函数
-void SelfMachineBase::SetupPlayerCollider() {
-    // 基类只设置默认值，子类可重写
-    double colliderWidth = 4.0f;   // 默认小圆圈
-    double colliderHeight = 4.0f;
-    double colliderX = 0.0f;       // 默认在左上角
-    double colliderY = 0.0f;
-    bool useCustomCollider = true;
-}
 
 //input
 void SelfMachineBase::HandleInput(float deltaTime) {
@@ -99,29 +99,42 @@ void SelfMachineBase::HandleMovement(float deltaTime) {
 }
 
 void SelfMachineBase::HandleShooting() {
-    if (inputHandler->IsKeyPressed(SDLK_z)) {  // 东方用Z射击
+    if (inputHandler->IsKeyPressed(SDLK_Z)) {  // 东方用Z射击
         DoShoot();
     }
 }
 
 void SelfMachineBase::HandleBomb() {
-    if (inputHandler->IsKeyPressed(SDLK_x) && bombCount > 0) {
+    if (inputHandler->IsKeyPressed(SDLK_X) && bombCount > 0) {
         UseBomb();
     }
 }
 //状态管理
 void SelfMachineBase::SetState(PlayerState newState) {
+    PlayerState oldState = currentState;
     currentState = newState;
     
     switch (newState) {
         case PlayerState::INVINCIBLE:
-            invincibleTimer = 2.0f;  // 2秒无敌
+            invincibleTimer = 2.0f;
             break;
         case PlayerState::FOCUS:
-            // 可以添加集中时的特效
+            if (oldState != PlayerState::FOCUS) {
+                UpdateHitPointVisibility();  // 进入集中时更新显示
+            }
+            break;
+        case PlayerState::NORMAL:
+            if (oldState == PlayerState::FOCUS) {
+                UpdateHitPointVisibility();  // 离开集中时更新显示
+            }
+            break;
+        case PlayerState::BOMBING:
+            bombTimer = 3.0f;
+            UpdateHitPointVisibility();  // 添加显示更新
             break;
     }
 }
+
 
 bool SelfMachineBase::IsInvincible() const {
     return currentState == PlayerState::INVINCIBLE || currentState == PlayerState::BOMBING;
@@ -139,6 +152,10 @@ void SelfMachineBase::AddPower(float amount) {
 void SelfMachineBase::AddBomb() {
     bombCount++;
     OnBombCollected();
+}
+
+void SelfMachineBase::AddLife() {
+    lives++;
 }
 
 void SelfMachineBase::AddBombFragment() {
@@ -192,4 +209,35 @@ void SelfMachineBase::UpdateStateEffects(float deltaTime) {
 bool SelfMachineBase::ShouldBombResetHitbox() const {
     return IsInBombMode();  // 东方机制：炸弹时无敌
 }
+
+//碰撞新设函数
+// 在RenderHitPoint()中，视觉判定点应该更小且更明显
+void SelfMachineBase::RenderHitPoint(Renderer* renderer) {
+    if (!showHitPoint) return;
+    
+    float centerX = x + width / 2.0f;
+    float centerY = y + height / 2.0f;
+    
+    // 绘制判定点（小绿圈）- 这是视觉辅助
+    SDL_SetRenderDrawColor(renderer->GetRenderer(), 0, 255, 0, 255);  // 不透明绿色
+    SDL_FRect hitPoint = {
+        centerX - visualHitPointRadius,
+        centerY - visualHitPointRadius,
+        visualHitPointRadius * 2,
+        visualHitPointRadius * 2
+    };
+    SDL_RenderFillRect(renderer->GetRenderer(), &hitPoint);
+    
+    // 绘制白色小点作为中心
+    SDL_SetRenderDrawColor(renderer->GetRenderer(), 255, 255, 255, 255);
+    SDL_FRect centerDot = {
+        centerX - 1, centerY - 1, 2, 2
+    };
+    SDL_RenderFillRect(renderer->GetRenderer(), &centerDot);
+}
+
+void SelfMachineBase::UpdateHitPointVisibility() {
+    showHitPoint = (currentState == PlayerState::FOCUS);  // 集中时显示
+}
+
 
