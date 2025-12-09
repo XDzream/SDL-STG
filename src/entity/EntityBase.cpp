@@ -44,6 +44,19 @@ bool EntityBase::IsOutOfBounds(int screenWidth,int screenHeight) const{
 
 }
 
+SDL_FRect EntityBase::GetColliderBounds() const {
+    if (useCustomCollider) {
+        return SDL_FRect{
+            x + colliderX,
+            y + colliderY,
+            colliderWidth,
+            colliderHeight
+        };
+    }
+    // 默认返回实体外框
+    return SDL_FRect{x, y, width, height};
+}
+
 float EntityBase::DistanceTo(const EntityBase& other) const{
     float dx = GetCenterX() - other.GetCenterX();
     float dy = GetCenterY() - other.GetCenterY();

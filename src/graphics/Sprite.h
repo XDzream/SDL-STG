@@ -4,9 +4,8 @@
 
 #ifndef SPRITE_H
 #define SPRITE_H
-#include <string>
 
-#endif //SPRITE_H
+#include <string>
 #include <SDL3/SDL.h>
 #include "Renderer.h"
 
@@ -37,3 +36,5 @@ private:
 
 
 };
+
+#endif //SPRITE_H

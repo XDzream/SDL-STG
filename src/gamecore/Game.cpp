@@ -3,6 +3,7 @@
 //
 
 #include "Game.h"
+#include "../player/TestPlayer.h"
 
 Game::Game() {
   gameRunning = true;
@@ -45,23 +46,15 @@ bool Game::Initialize(){
 
     gameRenderer = std::make_unique<Renderer>();
     gameInputHandler = std::make_unique<InputHandler>();
-    gameSprite = std::make_unique<Sprite>();
 
     if(!gameRenderer->Initialize(windowTitle, windowWidth, windowHeight)){
         std::cout << "Failed to initialize renderer" << std::endl;
         return false;
     }
 
-    std::string imagePath = "assert/pic.png";
-
-    if(!gameSprite->LoadFromFile(imagePath, *gameRenderer)){
-        std::cerr << "Failed to load test sprite from " << imagePath << "! Using fallback rectangle." << std::endl;
-
-    }else{
-
-        std::cout << "Sprite loaded successfully: " << gameSprite->GetWidth() << "x" << gameSprite->GetHeight() << std::endl;
-
-    }
+    // 创建并初始化玩家
+    player = std::make_unique<TestPlayer>(gameInputHandler.get(), windowWidth, windowHeight);
+    player->Initialize(gameRenderer.get());
 
     gameRunning = true;
 
@@ -69,11 +62,6 @@ bool Game::Initialize(){
 }
 
 void Game::Cleanup(){
-    if(gameSprite){
-        gameSprite->Free();
-        gameSprite.reset();
-    }
-
     if(gameRenderer){
         gameRenderer->Cleanup();
         gameRenderer.reset();
@@ -81,6 +69,10 @@ void Game::Cleanup(){
 
     if(gameInputHandler){
         gameInputHandler.reset();
+    }
+
+    if(player){
+        player.reset();
     }
     
     SDL_Quit();
@@ -100,8 +92,10 @@ void Game::Update() {
         std::cout << "Shooting...\n";
     }
     
-    // 更新测试精灵
-    UpdateTestSprite();
+    // 更新玩家
+    if (player) {
+        player->Update(static_cast<float>(deltaTime));
+    }
 }
 
 void Game::Render() {
@@ -109,8 +103,10 @@ void Game::Render() {
     gameRenderer->SetDrawColor(255, 255, 255, 255);
     gameRenderer->Clear();
     
-    // 渲染测试精灵
-    RenderTestSprite();
+    // 渲染玩家
+    if (player) {
+        player->Render(gameRenderer.get());
+    }
     
     // 呈现画面
     gameRenderer->Present();
@@ -140,43 +136,7 @@ void Game::FrameRateControl() {
 }
 
 
-//测试精灵图
-void Game::UpdateTestSprite() {
-    const float moveSpeed = 1.0f;
-    
-    if (gameInputHandler->IsKeyPressed(SDLK_LEFT)) {
-        testSpriteX -= moveSpeed * deltaTime;
-    }
-    if (gameInputHandler->IsKeyPressed(SDLK_RIGHT)) {
-        testSpriteX += moveSpeed * deltaTime;
-    }
-    if (gameInputHandler->IsKeyPressed(SDLK_UP)) {
-        testSpriteY -= moveSpeed * deltaTime;
-    }
-    if (gameInputHandler->IsKeyPressed(SDLK_DOWN)) {
-        testSpriteY += moveSpeed * deltaTime;
-    }
-    
-    // 边界限制 - 从main.cpp移植
-    const int spriteWidth = gameSprite->IsLoaded() ? gameSprite->GetWidth() : 32;
-    const int spriteHeight = gameSprite->IsLoaded() ? gameSprite->GetHeight() : 32;
-    
-    if (testSpriteX < 0) testSpriteX = 0;
-    if (testSpriteX > windowWidth - spriteWidth) testSpriteX = windowWidth - spriteWidth;
-    if (testSpriteY < 0) testSpriteY = 0;
-    if (testSpriteY > windowHeight - spriteHeight) testSpriteY = windowHeight - spriteHeight;
-}
-
-void Game::RenderTestSprite() {
-    if (gameSprite->IsLoaded()) {
-        gameSprite->Render(*gameRenderer, (int)testSpriteX, (int)testSpriteY);
-    } else {
-        // 降级渲染 - 显示红色方块 - 从main.cpp移植
-        SDL_FRect rect = {testSpriteX, testSpriteY, 32.0f, 32.0f};
-        SDL_SetRenderDrawColor(gameRenderer->GetRenderer(), 255, 0, 0, 255);
-        SDL_RenderFillRect(gameRenderer->GetRenderer(), &rect);
-    }
-}
+// 测试精灵逻辑已移除，改为玩家系统
 
 
 

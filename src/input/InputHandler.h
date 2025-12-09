@@ -5,8 +5,6 @@
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H
 
-#endif //INPUTHANDLER_H
-
 #include<SDL3/SDL.h>
 #include<iostream>
 #include<cstring>
@@ -31,3 +29,5 @@ private:
 
     Uint8 previousKeyStates[SDL_SCANCODE_COUNT];
 };
+
+#endif //INPUTHANDLER_H

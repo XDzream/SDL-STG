@@ -17,10 +17,11 @@
 #include <memory>
 
 #include "../graphics/Renderer.h"
-#include "../graphics/Sprite.h"
 #include "../input/InputHandler.h"
+#include "../graphics/Sprite.h"
 
-#endif //GAME_H
+
+class TestPlayer;
 
 class Game {
 
@@ -40,6 +41,7 @@ private:
     std::unique_ptr<Renderer> gameRenderer;
     std::unique_ptr<InputHandler> gameInputHandler;
     std::unique_ptr<Sprite> gameSprite;
+    std::unique_ptr<TestPlayer> player;
 
     
     //游戏状态
@@ -89,3 +91,4 @@ private:
 
 
 };
+#endif //GAME_H

@@ -82,6 +82,19 @@ void SelfMachineBase::OnCollision(EntityBase* other) {
 
 //input
 void SelfMachineBase::HandleInput(float deltaTime) {
+    // 集中模式切换：按住左Shift进入 FOCUS，松开回 NORMAL（不在炸弹/死亡状态时才切换）
+    if (currentState != PlayerState::BOMBING && currentState != PlayerState::DEAD && currentState != PlayerState::INVINCIBLE) {
+        if (inputHandler->IsKeyPressed(SDLK_LSHIFT)) {
+            if (currentState != PlayerState::FOCUS) {
+                SetState(PlayerState::FOCUS);
+            }
+        } else {
+            if (currentState == PlayerState::FOCUS) {
+                SetState(PlayerState::NORMAL);
+            }
+        }
+    }
+
     HandleMovement(deltaTime);
     HandleShooting();
     HandleBomb();
@@ -202,6 +215,11 @@ void SelfMachineBase::UpdateTimers(float deltaTime) {
     }
 }
 
+// 状态效果更新，基类默认不做处理，留给子类实现特效/衍生行为
+void SelfMachineBase::UpdateStateEffects(float deltaTime) {
+    (void)deltaTime; // 避免未使用警告
+}
+
 
 
 bool SelfMachineBase::ShouldBombResetHitbox() const {
@@ -236,6 +254,11 @@ void SelfMachineBase::RenderHitPoint(Renderer* renderer) {
 
 void SelfMachineBase::UpdateHitPointVisibility() {
     showHitPoint = (currentState == PlayerState::FOCUS);  // 集中时显示
+}
+
+// 默认碰撞体：使用实体尺寸的矩形，子类可重写为圆形等
+void SelfMachineBase::SetupPlayerCollider() {
+    SetRectangleCollider(0.0f, 0.0f, width, height);
 }
 
 
