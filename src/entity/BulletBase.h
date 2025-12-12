@@ -9,6 +9,7 @@
 #include "../graphics/Sprite.h"
 #include "../graphics/Renderer.h"
 #include "EntityBase.h"
+struct Bulletconfig;
 
 enum class BulletOwner {
     PLAYER,

@@ -1,4 +1,4 @@
-//
+ //
 // Created by zream on 2025/12/9.
 //
 
@@ -8,7 +8,8 @@
 #include <iostream>
 
 BulletBase::BulletBase(BulletOwner owner, float x, float y)
-    : EntityBase(EntityType::PLAYER_BULLET, x, y, 0.0f, 0.0f),  // 默认按玩家子弹，可由子类修改 type
+    : EntityBase(owner == BulletOwner::PLAYER ? EntityType::PLAYER_BULLET : EntityType::ENEMY_BULLET, 
+                 x, y, 0.0f, 0.0f),
       owner(owner),
       damage(1.0f),
       lifeTimeMs(0.0f),

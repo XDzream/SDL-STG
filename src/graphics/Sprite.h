@@ -20,7 +20,13 @@ public:
     void Free();
     
     // 渲染功能
-    void Render(Renderer&renderer,int x, int y, int width = 0, int height = 0) const;
+    // 默认整图渲染；如需精灵表裁剪，传入 src 矩形（SDL_FRect）
+    void Render(Renderer &renderer, int x, int y, int width = 0, int height = 0, const SDL_FRect *src = nullptr) const;
+    // 便捷重载：接受 SDL_Rect，内部转换为 SDL_FRect
+    void Render(Renderer &renderer, int x, int y, int width, int height, const SDL_Rect *src) const;
+    // 按帧索引渲染精灵表（frameWidth/frameHeight 为帧尺寸；columns 为每行帧数，0 表示按纹理宽自动计算）
+    void RenderFrame(Renderer& renderer, int frameIndex, int frameWidth, int frameHeight,
+                     int x, int y, float scale = 1.0f, int columns = 0) const;
     void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
     
     // 状态查询

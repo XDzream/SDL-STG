@@ -44,6 +44,10 @@ add_executable(NewSdlButtleHell
         src/player/TestPlayer.h
         src/entity/BulletBase.cpp
         src/entity/BulletBase.h
+        src/bullet/BulletConfig.h
+        src/bullet/BulletConfigParser.cpp
+        src/bullet/BulletFactory.cpp
+        src/bullet/BulletFactory.h
 )
 
 # 链接SDL3库

@@ -1,0 +1,13 @@
+{
+  "id": "bullet_straight_small",
+  "texture": "assets/textures/bullet_sheet.png",
+  "frames": [
+    { "x": 0, "y": 0, "w": 16, "h": 16 },
+    { "x": 20, "y": 0, "w": 16, "h": 16 }
+  ],
+  "collider": {
+    "type": "circle",
+    "radius": 6.0
+  },
+  "render_scale": 1.0
+}

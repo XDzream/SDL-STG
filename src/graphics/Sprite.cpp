@@ -44,7 +44,7 @@ void Sprite::Free() {
     isLoaded = false;
 }
 
-void Sprite::Render(Renderer& renderer, int x, int y, int renderWidth, int renderHeight) const {
+void Sprite::Render(Renderer &renderer, int x, int y, int renderWidth, int renderHeight, const SDL_FRect *src) const {
     if (!isLoaded || !texture) {
         return;
     }
@@ -62,7 +62,39 @@ void Sprite::Render(Renderer& renderer, int x, int y, int renderWidth, int rende
     };
     
     // SDL3使用SDL_RenderTexture和SDL_FRect
-    SDL_RenderTexture(renderer.GetRenderer(), texture, nullptr, &destRect);
+    SDL_RenderTexture(renderer.GetRenderer(), texture, src, &destRect);
+}
+
+void Sprite::Render(Renderer &renderer, int x, int y, int renderWidth, int renderHeight, const SDL_Rect *src) const {
+    // 将 SDL_Rect 转换为 SDL_FRect 再调用主渲染函数
+    SDL_FRect srcF {
+        src ? static_cast<float>(src->x) : 0.0f,
+        src ? static_cast<float>(src->y) : 0.0f,
+        src ? static_cast<float>(src->w) : 0.0f,
+        src ? static_cast<float>(src->h) : 0.0f
+    };
+    Render(renderer, x, y, renderWidth, renderHeight, src ? &srcF : nullptr);
+}
+
+void Sprite::RenderFrame(Renderer& renderer, int frameIndex, int frameWidth, int frameHeight,
+                         int x, int y, float scale, int columns) const {
+    if (!isLoaded || !texture || frameWidth <= 0 || frameHeight <= 0) return;
+
+    // 自动计算每行列数
+    int cols = columns;
+    if (cols <= 0 && frameWidth > 0) {
+        cols = std::max(1, width / frameWidth);
+    }
+
+    SDL_Rect src {};
+    src.w = frameWidth;
+    src.h = frameHeight;
+    src.x = (frameIndex % cols) * frameWidth;
+    src.y = (frameIndex / cols) * frameHeight;
+
+    int dstW = static_cast<int>(frameWidth * scale);
+    int dstH = static_cast<int>(frameHeight * scale);
+    Render(renderer, x, y, dstW, dstH, &src);
 }
 
 void Sprite::SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
