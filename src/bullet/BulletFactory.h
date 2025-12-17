@@ -40,6 +40,9 @@ public:
     // 获取所有可用的子弹类型
     std::vector<std::string> GetAvailableBulletTypes() const;
 
+    bool InitializeExistingBullet(BulletBase* bullet, const std::string& bulletType);
+
+
 private:
     // 内部资源管理结构
     struct BulletResources {

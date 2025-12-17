@@ -52,29 +52,19 @@ std::unique_ptr<BulletBase> BulletFactory::CreateBullet(const std::string& bulle
 
     // 创建子弹实例
     auto bullet = std::make_unique<BulletBase>(owner, x, y);
-
-    // 设置精灵（从共享资源复制或引用）
-    if (resources.sprite) {
-        // 为每个子弹创建独立的Sprite实例（共享纹理资源）
-        auto bulletSprite = std::make_unique<Sprite>();
-        if (bulletSprite->LoadFromFile(resources.config->texture, *renderer)) {
-            bullet->SetSprite(std::move(bulletSprite));
-        }
+    
+    // 使用 InitializeFromConfig 方法初始化子弹
+    if (!bullet->InitializeFromConfig(resources.config.get(), resources.sprite)) {
+        std::cerr << "Failed to initialize bullet from config: " << bulletType << std::endl;
+        return nullptr;
     }
-
-    // 设置碰撞体
-    const BulletConfig* config = resources.config.get();
-    if (config->collider.type == "circle") {
-        bullet->SetCircleCollider(config->collider.radius);
-    } else if (config->collider.type == "rect") {
-        bullet->SetRectCollider(config->collider.w, config->collider.h);
-    }
-
+    
     // 初始化子弹（设置尺寸等）
     bullet->Initialize(renderer);
 
     return bullet;
 }
+
 
 const BulletConfig* BulletFactory::GetBulletConfig(const std::string& bulletType) const {
     auto it = bulletResources.find(bulletType);
@@ -91,6 +81,31 @@ std::vector<std::string> BulletFactory::GetAvailableBulletTypes() const {
         types.push_back(pair.first);
     }
     return types;
+}
+
+bool BulletFactory::InitializeExistingBullet(BulletBase* bullet, const std::string& bulletType) {
+    if (!bullet || !initialized) {
+        return false;
+    }
+    
+    auto it = bulletResources.find(bulletType);
+    if (it == bulletResources.end()) {
+        std::cerr << "Bullet type not found: " << bulletType << std::endl;
+        return false;
+    }
+    
+    const BulletResources& resources = it->second;
+    
+    // 使用 InitializeFromConfig 方法初始化现有子弹
+    if (!bullet->InitializeFromConfig(resources.config.get(), resources.sprite)) {
+        std::cerr << "Failed to initialize bullet from config: " << bulletType << std::endl;
+        return false;
+    }
+    
+    // 初始化子弹（设置尺寸等）
+    bullet->Initialize(renderer);
+    
+    return true;
 }
 
 bool BulletFactory::LoadConfigs(const std::string& configDir, Renderer& renderer) {
@@ -116,38 +131,28 @@ bool BulletFactory::LoadConfigs(const std::string& configDir, Renderer& renderer
 bool BulletFactory::LoadConfigFile(const std::string& filePath, Renderer& renderer) {
     BulletConfig config;
     
-    // 使用BulletConfigParser解析JSON
     if (!BulletConfigParser::LoadFromFile(filePath, config)) {
-        std::cerr << "Failed to parse config file: " << filePath << std::endl;
         return false;
     }
 
-    // 检查id是否有效
     if (config.id.empty()) {
-        std::cerr << "Config file missing 'id' field: " << filePath << std::endl;
         return false;
     }
 
-    // 加载并缓存纹理（如果尚未加载）
-    std::string texturePath = config.texture;
-    if (textureCache.find(texturePath) == textureCache.end()) {
-        auto sprite = LoadAndCacheTexture(texturePath, renderer);
-        if (!sprite) {
-            std::cerr << "Failed to load texture: " << texturePath << std::endl;
-            return false;
-        }
+    // 直接调用，让LoadAndCacheTexture处理所有缓存逻辑
+    auto sprite = LoadAndCacheTexture(config.texture, renderer);
+    if (!sprite) {
+        return false;
     }
 
-    // 存储配置和资源
     BulletResources resources;
     resources.config = std::make_shared<BulletConfig>(std::move(config));
-    resources.sprite = textureCache[texturePath];
+    resources.sprite = sprite;  // 直接使用返回值
 
     bulletResources[resources.config->id] = resources;
-    
-    std::cout << "Loaded bullet config: " << resources.config->id << std::endl;
     return true;
 }
+
 
 std::shared_ptr<Sprite> BulletFactory::LoadAndCacheTexture(const std::string& texturePath, Renderer& renderer) {
     // 检查缓存

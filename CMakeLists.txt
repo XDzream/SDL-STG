@@ -48,6 +48,8 @@ add_executable(NewSdlButtleHell
         src/bullet/BulletConfigParser.cpp
         src/bullet/BulletFactory.cpp
         src/bullet/BulletFactory.h
+        src/manager/BulletManager.cpp
+        src/manager/BulletManager.h
 )
 
 # 链接SDL3库
