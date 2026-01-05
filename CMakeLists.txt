@@ -50,6 +50,16 @@ add_executable(NewSdlButtleHell
         src/bullet/BulletFactory.h
         src/manager/BulletManager.cpp
         src/manager/BulletManager.h
+        src/animation/Animation.cpp
+        src/animation/Animation.h
+        src/animation/Animator.cpp
+        src/animation/Animator.h
+        src/animation/AnimationHelper.cpp
+        src/animation/AnimationHelper.h
+        src/graphics/SpriteAtlas.cpp
+        src/graphics/SpriteAtlas.h
+        src/components/RenderComponent.cpp
+        src/components/RenderComponent.h
 )
 
 # 链接SDL3库

@@ -1,0 +1,52 @@
+{
+  "texture": "assert/player_spritesheet.png",
+  "frames": {
+    "player_idle_1": {
+      "x": 0,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "duration": 0.15
+    },
+    "player_idle_2": {
+      "x": 32,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "duration": 0.15
+    },
+    "player_move_left_1": {
+      "x": 64,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "duration": 0.1
+    },
+    "player_move_left_2": {
+      "x": 96,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "duration": 0.1
+    },
+    "player_move_right_1": {
+      "x": 128,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "duration": 0.1
+    },
+    "player_move_right_2": {
+      "x": 160,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "duration": 0.1
+    }
+  },
+  "animations": {
+    "idle": ["player_idle_1", "player_idle_2"],
+    "move_left": ["player_move_left_1", "player_move_left_2"],
+    "move_right": ["player_move_right_1", "player_move_right_2"]
+  }
+}
